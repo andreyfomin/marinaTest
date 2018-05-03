@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
+  </ItemGroup>
+  
+  <Target Name="InstallNpm" BeforeTargets="cleanWwwRoot">
+    <Exec Command="npm install" WorkingDirectory="appClient" />
+  </Target>
+
+  <Target Name="cleanWwwRoot" BeforeTargets="angularBuild">
+    <Exec Command="del /q wwwroot\*" />
+  </Target>
+
+  <Target Name="angularBuild" BeforeTargets="Build">
+    <Exec Command="npm run build_webroot" WorkingDirectory="appClient" />
+  </Target>
+
+  <ItemGroup>
+    <!-- extends watching group to include *.js files -->
+    <Watch Include="appClient\src\**" Exclude="appClient\node_modules\**;$(DefaultExcludes)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Watch Remove="appClient\src\environments\environment.stage.ts" />
+  </ItemGroup>
+
+</Project>
